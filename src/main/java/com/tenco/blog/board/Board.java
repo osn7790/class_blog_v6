@@ -1,5 +1,6 @@
 package com.tenco.blog.board;
 
+import com.tenco.blog.reply.Reply;
 import com.tenco.blog.user.User;
 import com.tenco.blog.util.MyDateUtil;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @NoArgsConstructor// JPA 에서 엔티티는 기본 생성자가 필요하다
@@ -65,4 +68,26 @@ public class Board {
 
         return MyDateUtil.timestampFormat(createdAt);
     }
+
+    /**
+     * 게시글과 댓글을 양방향 맵핑으로 설계 해보겠다
+     * 하나의 게시글(one)에는 여려 개의 댓글(Many)을 가질 수 있다.
+     *
+     * Board 와 Reply 테이블 간에 fk 는 Reply 이 가지고 있어야 한다.
+     * mappedBy : 외래키 주인이 아닌 엔티티에 설정해야 한다.
+     *
+     * cascade = CascadeType.REMOVE
+     * 영속성 전이
+     * - 게시글 삭제 시 관련된 모든 댓글도 자동 삭제 처리 함
+     * - 데이터 무결성 보장
+     *
+     */
+
+    @OrderBy("id DESC") // 정렬 옵션 설정
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.REMOVE)
+    List<Reply> replies = new ArrayList<>(); // 일기 전용
+    // 여러 개의 row가 출력되므로 리스트로 보여줌. List 선언과 동시에 초기화 <- 객체가 있어야 배열가능.
+
+
+
 }
