@@ -51,6 +51,11 @@ public class Board {
     @CreationTimestamp // 하이버 네이트가 제공하는 어노테이션
     private Timestamp createdAt;
 
+    // 테이블에 필드 만들지마!
+    // (현재 로그인한 유저와 게시글 작성자 여부를 판단 함)
+    @Transient
+    private boolean isBoardOwner;
+
     public Board(String title, String content, String username) {
         this.title = title;
         this.content = content;

@@ -67,6 +67,11 @@ public class Reply {
     @Transient
     private boolean isReplyOwner;
 
+
+    public boolean isOwner(Long sessionId) {
+        return this.user.getId().equals(sessionId);
+    }
+
     // getTime 메서드를 호출하면 우리가 포맷한 시간형태로 리턴되서 반영
     public String getTime() {
         return MyDateUtil.timestampFormat(createdAt);
